@@ -14,7 +14,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Samsung'),
+        title: Text(''),
       ),
       body: _buildBody(),
     );

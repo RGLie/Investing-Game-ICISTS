@@ -221,16 +221,30 @@ class _InputPageState extends State<InputPage> {
 
                                               CollectionReference users = FirebaseFirestore.instance.collection('users');
                                               CollectionReference basics = FirebaseFirestore.instance.collection('trade_state');
-                                              var documentSnapshot = await basics.doc('basic_assets').get();
-                                              users.doc(widget.user.uid).set({
-                                                'full_name': _nameController.text,
-                                                'nick_name': _nicknameController.text,
-                                                'phone_number': _phoneController.text,
-                                                'team': _teamController.text,
-
-
-
+                                              basics.doc('basic_assets').get()
+                                              .then((DocumentSnapshot ds){
+                                                  users.doc(widget.user.uid).set({
+                                                    'full_name': _nameController.text,
+                                                    'nick_name': _nicknameController.text,
+                                                    'phone_number': _phoneController.text,
+                                                    'team': _teamController.text,
+                                                    'money' : ds['money'],
+                                                    'startup_1_stocks' : ds['stocks'],
+                                                    'startup_2_stocks' : ds['stocks'],
+                                                    'startup_3_stocks' : ds['stocks'],
+                                                    'startup_4_stocks' : ds['stocks'],
+                                                    'startup_5_stocks' : ds['stocks'],
+                                                    'startup_6_stocks' : ds['stocks'],
+                                                    'startup_7_stocks' : ds['stocks'],
+                                                    'startup_8_stocks' : ds['stocks']
+                                                  });
                                               });
+
+                                              /*FirebaseFirestore.instance.collection('student').document('kim').get().then(
+                                              (DocumentSnapshot ds) {
+                                              if (name == ds.data['name']) {
+                                              // 실행할 구문 추가
+                                              });*/
                                               Navigator.pop(context);
                                               Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                 return TabPage(widget.user);

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _TradePageState extends State<TradePage> {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final CollectionReference _tradeStream = FirebaseFirestore.instance.collection('trade_state');
-  final List<String> startup = <String>['Samsung', 'Apple', 'Google', 'Tesla', 'Intel', 'Facebook', 'Amazon', 'LG'];
+  final List<String> startup = <String>['삼성전자', '애플', '알파벳 Inc.', '테슬라', '인텔', '페이스북', '아마존닷컴', '엘지화학'];
   final List<String> startup_image = <String>[
     'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
     'https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/P9h/image/sR7PN1eZ70y5YgfR0zmcvqJNgSg.jpg',
@@ -43,19 +44,22 @@ class _TradePageState extends State<TradePage> {
     super.initState();
     _pages=[
       Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
-      Startup1Trade(widget.user),
+      Startup2Trade(widget.user),
+      Startup3Trade(widget.user),
+      Startup4Trade(widget.user),
+      Startup5Trade(widget.user),
+      Startup6Trade(widget.user),
+      Startup7Trade(widget.user),
+      Startup8Trade(widget.user),
     ];
   }
 
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Trading'),
@@ -79,6 +83,7 @@ class _TradePageState extends State<TradePage> {
                     padding: EdgeInsets.only(left: 20, right: 20),
                     itemCount: 8,
                     itemBuilder: (BuildContext context, int index){
+                      CollectionReference prices = FirebaseFirestore.instance.collection('startup_${index+1}');
                       Map<String, dynamic> state_data = snapshot.data.data() as Map<String, dynamic>;
                       return InkWell(
                         onTap: () {
@@ -158,23 +163,121 @@ class _TradePageState extends State<TradePage> {
 
                                     Padding(
                                       padding: const EdgeInsets.only(left: 30.0),
-                                      child: Center(
-                                          child: Text(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
                                               '${startup[index]}',
                                               style: TextStyle(fontSize: 18),
                                               textAlign: TextAlign.left
-                                          )
+                                          ),
+                                          FutureBuilder<DocumentSnapshot>(
+                                            future: users.doc(widget.user.uid).get(),
+                                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                    '- 주',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black45
+                                                    ),
+                                                    textAlign: TextAlign.left
+                                                );
+                                              }
+                                              if (snapshot.hasData && !snapshot.data.exists) {
+                                                return Text(
+                                                    '- 주',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black45
+                                                    ),
+                                                    textAlign: TextAlign.left
+                                                );
+                                              }
+
+                                              if (snapshot.connectionState == ConnectionState.done) {
+                                                Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
+                                                return Text(
+                                                    '${data['startup_${index+1}_stocks']} 주',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black45
+                                                    ),
+                                                    textAlign: TextAlign.left
+                                                );
+                                              }
+                                              return Text(
+                                                  '- 주',
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black45
+                                                  ),
+                                                  textAlign: TextAlign.left
+                                              );
+                                            }
+                                          ),
+
+                                        ],
                                       ),
                                     ),
 
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Center(child: Text('${startup_price[index].toString()} 원')),
-                                  ],
-                                )
+                                Expanded(
+                                  child: StreamBuilder<DocumentSnapshot>(
+                                      stream: prices.doc('price').snapshots(),
+                                      builder: (context, snap) {
+                                        Map<String, dynamic> price_data = snap.data?.data() ?? {'price_now' : '0', 'price_past':0};
+
+
+
+                                        if (snap.hasError) {
+                                          return Text('ERROR');
+                                        }
+                                        if (snap.connectionState == ConnectionState.waiting) {
+                                          return Center(
+                                              child: CircularProgressIndicator());
+                                        }
+                                        print(price_data['price_now'].runtimeType.toString());
+
+                                        int past_price = price_data['price_past'];
+                                        int now_price = price_data['price_now'];
+                                        int diff = (now_price-past_price).abs();
+                                        var rise=false;
+
+                                        if((now_price - past_price) >= 0){
+                                          rise=true;
+                                        }
+
+
+                                        return Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            rise?
+                                            Text(
+                                                '${price_data['price_now']} 원',
+                                              style: TextStyle(fontSize: 17, color: Colors.redAccent),
+                                            ):
+                                            Text(
+                                              '${price_data['price_now']} 원',
+                                              style: TextStyle(fontSize: 17, color: Colors.indigoAccent),
+                                            ),
+                                            rise?
+                                            Text(
+                                              '+ ${diff.toString()} 원',
+                                              style: TextStyle(color: Colors.redAccent),
+                                            ):
+                                            Text(
+                                              '- ${diff.toString()} 원',
+                                              style: TextStyle(color: Colors.indigoAccent),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                  ),
+                                ),
                               ],
                             ),
                           ),
