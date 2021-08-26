@@ -239,8 +239,6 @@ class _TradePageState extends State<TradePage> {
                                           return Center(
                                               child: CircularProgressIndicator());
                                         }
-                                        print(price_data['price_now'].runtimeType.toString());
-
                                         int past_price = price_data['price_past'];
                                         int now_price = price_data['price_now'];
                                         int diff = (now_price-past_price).abs();
