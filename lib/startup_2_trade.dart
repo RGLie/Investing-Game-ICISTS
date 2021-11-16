@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class Startup2Trade extends StatefulWidget {
   final User user;
-  Startup2Trade(this.user);
+  bool trade_time;
+  Startup2Trade(this.user, this.trade_time);
 
   @override
   _Startup2TradeState createState() => _Startup2TradeState();

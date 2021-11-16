@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class Startup5Trade extends StatefulWidget {
   final User user;
-  Startup5Trade(this.user);
+  bool trade_time;
+  Startup5Trade(this.user, this.trade_time);
 
   @override
   _Startup5TradeState createState() => _Startup5TradeState();

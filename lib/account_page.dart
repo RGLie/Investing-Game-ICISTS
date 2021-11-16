@@ -16,6 +16,8 @@ class _AccountPageState extends State<AccountPage> {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +72,16 @@ class _AccountPageState extends State<AccountPage> {
                   Text("닉네임: ${data['nick_name']}"),
                   Text("전화번호: ${data['phone_number']}"),
                   Text("팀: ${data['team']}"),
+                  Text("돈: ${data['money'].toString()}"),
+                  Text("기업1 주식: ${data['startup_1_stocks'].toString()}"),
+                  Text("기업2 주식: ${data['startup_2_stocks'].toString()}"),
+                  Text("기업3 주식: ${data['startup_3_stocks'].toString()}"),
+                  Text("기업4 주식: ${data['startup_4_stocks'].toString()}"),
+                  Text("기업5 주식: ${data['startup_5_stocks'].toString()}"),
+                  Text("기업6 주식: ${data['startup_6_stocks'].toString()}"),
+                  Text("기업7 주식: ${data['startup_7_stocks'].toString()}"),
+                  Text("기업8 주식: ${data['startup_8_stocks'].toString()}"),
+
                   Padding(padding: EdgeInsets.all(10)),
                   OutlinedButton(
                     onPressed: () {

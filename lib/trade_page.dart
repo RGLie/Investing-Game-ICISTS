@@ -42,16 +42,7 @@ class _TradePageState extends State<TradePage> {
   @override
   void initState() {
     super.initState();
-    _pages=[
-      Startup1Trade(widget.user),
-      Startup2Trade(widget.user),
-      Startup3Trade(widget.user),
-      Startup4Trade(widget.user),
-      Startup5Trade(widget.user),
-      Startup6Trade(widget.user),
-      Startup7Trade(widget.user),
-      Startup8Trade(widget.user),
-    ];
+
   }
 
 
@@ -90,42 +81,42 @@ class _TradePageState extends State<TradePage> {
                           if(state_data['open']){
                             if(index==0){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup1Trade(widget.user);
+                                return Startup1Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==1){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup2Trade(widget.user);
+                                return Startup2Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==2){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup3Trade(widget.user);
+                                return Startup3Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==3){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup4Trade(widget.user);
+                                return Startup4Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==4){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup5Trade(widget.user);
+                                return Startup5Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==5){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup6Trade(widget.user);
+                                return Startup6Trade(widget.user,state_data['open']);
                               }));
                             }
                             if(index==6){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup7Trade(widget.user);
+                                return Startup7Trade(widget.user, state_data['open']);
                               }));
                             }
                             if(index==7){
                               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return Startup8Trade(widget.user);
+                                return Startup8Trade(widget.user, state_data['open']);
                               }));
                             }
 
