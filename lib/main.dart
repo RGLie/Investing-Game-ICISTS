@@ -9,6 +9,22 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
+
+  MaterialColor kPrimaryColor = const MaterialColor(
+    0xFF7568F0,
+    const <int, Color>{
+      50: const Color(0xFF7568F0),
+      100: const Color(0xFF7568F0),
+      200: const Color(0xFF7568F0),
+      300: const Color(0xFF7568F0),
+      400: const Color(0xFF7568F0),
+      500: const Color(0xFF7568F0),
+      600: const Color(0xFF7568F0),
+      700: const Color(0xFF7568F0),
+      800: const Color(0xFF7568F0),
+      900: const Color(0xFF7568F0),
+    },
+  );
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,8 +32,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter',
       theme: ThemeData(
           fontFamily: 'SpoqaHanSansNeo',
-          primaryColor: Colors.black,
-          accentColor: Colors.black
+          primarySwatch: kPrimaryColor,
+        backgroundColor: Colors.white
+
       ),
       home: RootPage(),
     );

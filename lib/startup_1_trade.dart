@@ -9,7 +9,8 @@ import 'buy_page.dart';
 class Startup1Trade extends StatefulWidget {
   final User user;
   bool trade_time;
-  Startup1Trade(this.user, this.trade_time);
+  int num;
+  Startup1Trade(this.user, this.trade_time, this.num);
 
   @override
   _Startup1TradeState createState() => _Startup1TradeState();
@@ -23,7 +24,17 @@ class _Startup1TradeState extends State<Startup1Trade> {
   int money;
   int stock;
   int price;
-
+  final List<String> startup = <String>['삼성전자', '애플', '알파벳 Inc.', '테슬라', '인텔', '페이스북', '아마존닷컴', '엘지화학'];
+  List<String> startup_image=<String>[
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+    'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
+  ];
 
   CollectionReference prices;
   CollectionReference users;
@@ -33,7 +44,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
   @override
   void initState(){
 
-    prices = FirebaseFirestore.instance.collection('startup_1');
+    prices = FirebaseFirestore.instance.collection('startup_${widget.num}');
     users = FirebaseFirestore.instance.collection('users');
     priceStream = prices.doc('price').snapshots();
     userStream = users.doc(widget.user.uid).snapshots();
@@ -55,373 +66,368 @@ class _Startup1TradeState extends State<Startup1Trade> {
 
 
 
-    return Padding(
-      padding: const EdgeInsets.all(15),
-      child: Column(
-        children: [
-          Row(
+    return StreamBuilder<DocumentSnapshot>(
+      stream: priceStream,
+      builder: (context, snap) {
+        Map<String, dynamic> price_data = snap.data?.data() ?? {'price_now' : '0', 'price_past':0};
+        if (snap.hasError) {
+          return Text('ERROR');
+        }
+        if (snap.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CircularProgressIndicator());
+        }
+        int past_price = price_data['price_past'];
+        int now_price = price_data['price_now'];
+        int diff = (now_price-past_price).abs();
+        var rise=false;
+
+        if((now_price - past_price) >= 0){
+          rise=true;
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
             children: [
-              SizedBox(
-                height: 60,
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj'),
-                ),
-              ),
-              Padding(padding: EdgeInsets.all(8)),
-              Text('삼성전자', style: TextStyle(fontSize: 20),),
-              Padding(padding: EdgeInsets.all(8)),
-              Expanded(
-                child: StreamBuilder<DocumentSnapshot>(
-                    stream: priceStream,
-                    builder: (context, snap) {
-                      Map<String, dynamic> price_data = snap.data?.data() ?? {'price_now' : '0', 'price_past':0};
-                      if (snap.hasError) {
-                        return Text('ERROR');
-                      }
-                      if (snap.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child: CircularProgressIndicator());
-                      }
-                      int past_price = price_data['price_past'];
-                      int now_price = price_data['price_now'];
-                      int diff = (now_price-past_price).abs();
-                      var rise=false;
-
-                      if((now_price - past_price) >= 0){
-                        rise=true;
-                      }
-
-
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-
-                        children: [
-                          Text(
-                            '현재가',
-                            style: TextStyle(color: Colors.black45, fontSize: 11),
-                            textAlign: TextAlign.end,
-                          ),
-                          rise?
-                          Text(
-                            '${price_data['price_now']} 원',
-                            style: TextStyle(fontSize: 19, color: Colors.redAccent),
-                          ):
-                          Text(
-                            '${price_data['price_now']} 원',
-                            style: TextStyle(fontSize: 19, color: Colors.indigoAccent),
-                          ),
-                          rise?
-                          Text(
-                            '+ ${diff.toString()} 원',
-                            style: TextStyle(color: Colors.redAccent),
-                            textAlign: TextAlign.end,
-                          ):
-                          Text(
-                            '- ${diff.toString()} 원',
-                            style: TextStyle(color: Colors.indigoAccent),
-                            textAlign: TextAlign.end,
-                          ),
-                        ],
-                      );
-                    }
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.all(Radius.circular(15))
+              Row(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(price_data['image_link']),
+                    ),
                   ),
-                  child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 4, top: 8),
-                            child: Row(
-                              children: [
-                                Text('보유주식'),
-                                Spacer(),
-                                StreamBuilder<DocumentSnapshot>(
-                                    stream: userStream,
-                                    builder: (context, snap) {
-                                      Map<String, dynamic> user_data = snap.data?.data();
-                                      if (snap.hasError) {
-                                        return Text('ERROR');
-                                      }
-                                      if (snap.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                      stock=user_data['startup_1_stocks'];
-                                      return Text('${user_data['startup_1_stocks']}주');
-                                    }
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 8, top: 4),
-                            child: Row(
-                              children: [
-                                Text('보유자산'),
-                                Spacer(),
-                                StreamBuilder<DocumentSnapshot>(
-                                    stream: userStream,
-                                    builder: (context, snap) {
-                                      Map<String, dynamic> user_data = snap.data?.data();
-                                      if (snap.hasError) {
-                                        return Text('ERROR');
-                                      }
-                                      if (snap.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                      money=user_data['money'];
-                                      return Text('${user_data['money']}원');
-                                    }
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 6.0, right: 6, bottom: 4),
-                            child: Container(
-                              child: Divider(color: Colors.black, thickness: 1,),
-                            ),
-                          ),
-                          Container(
-                            height:300,
-                            child: ListView.builder(
-                              itemCount: 12,
-                              itemBuilder: (BuildContext context, int index){
-                                return StreamBuilder<DocumentSnapshot>(
-                                    stream: FirebaseFirestore.instance.collection('startup_1').doc('price').snapshots(),
-                                    builder: (context, snap) {
+                  Padding(padding: EdgeInsets.all(8)),
+                  Text(price_data['name'], style: TextStyle(fontSize: 20),),
+                  Padding(padding: EdgeInsets.all(8)),
+                  Expanded(
+                    child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.end,
 
-                                      if (snap.hasError) {
-                                        return Text('ERROR');
-                                      }
-                                      if (snap.connectionState == ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                      Map<String, dynamic> price_data = snap.data.data();
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            check=true;
-                                            num1=index;
-                                            num2=price_data['price_now'];
-                                          });
+                            children: [
+                              Text(
+                                '현재가',
+                                style: TextStyle(color: Colors.black45, fontSize: 11),
+                                textAlign: TextAlign.end,
+                              ),
+                              rise?
+                              Text(
+                                '${price_data['price_now']} 원',
+                                style: TextStyle(fontSize: 19, color: Colors.redAccent),
+                              ):
+                              Text(
+                                '${price_data['price_now']} 원',
+                                style: TextStyle(fontSize: 19, color: Colors.indigoAccent),
+                              ),
+                              rise?
+                              Text(
+                                '+ ${diff.toString()} 원',
+                                style: TextStyle(color: Colors.redAccent),
+                                textAlign: TextAlign.end,
+                              ):
+                              Text(
+                                '- ${diff.toString()} 원',
+                                style: TextStyle(color: Colors.indigoAccent),
+                                textAlign: TextAlign.end,
+                              ),
+                            ],
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.all(Radius.circular(15))
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: StreamBuilder<DocumentSnapshot>(
+                            stream: userStream,
+                            builder: (context, snap) {
+                              if (snap.hasError) {
+                                return Text('ERROR');
+                              }
+                              if (snap.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              Map<String, dynamic> user_data = snap.data?.data();
+                              stock=user_data['startup_${widget.num}_stocks'];
+                              money=user_data['money'];
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 4, top: 8),
+                                    child: Row(
+                                      children: [
+                                        Text('보유주식'),
+                                        Spacer(),
+                                        Text('${user_data['startup_${widget.num}_stocks']}주'),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 8, top: 4),
+                                    child: Row(
+                                      children: [
+                                        Text('보유자산'),
+                                        Spacer(),
+                                        Text('${user_data['money']}원')
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 6.0, right: 6, bottom: 4),
+                                    child: Container(
+                                      child: Divider(color: Colors.black, thickness: 1,),
+                                    ),
+                                  ),
+                                  Container(
+                                    height:300,
+                                    child: ListView.builder(
+                                      itemCount: 12,
+                                      itemBuilder: (BuildContext context, int index){
+                                        return StreamBuilder<DocumentSnapshot>(
+                                            stream: FirebaseFirestore.instance.collection('startup_${widget.num}').doc('price').snapshots(),
+                                            builder: (context, snap) {
+
+                                              if (snap.hasError) {
+                                                return Text('ERROR');
+                                              }
+                                              if (snap.connectionState == ConnectionState.waiting) {
+                                                return Center(
+                                                    child: CircularProgressIndicator());
+                                              }
+                                              Map<String, dynamic> price_data = snap.data.data();
+                                              return InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    check=true;
+                                                    num1=index;
+                                                    num2=price_data['price_now'];
+                                                  });
 
 
-                                        },
-                                        child: Container(
-                                            height: 25,
-                                            child: Center(
-                                                child: index==5?
-                                                Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        width: 1,
-                                                        color: Colors.red,
+                                                },
+                                                child: Container(
+                                                    height: 25,
+                                                    child: Center(
+                                                        child: index==5?
+                                                        Container(
+                                                            decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                width: 1,
+                                                                color: Colors.red,
+                                                              ),
+                                                            ),
+                                                            child: Text('${price_data['price_now']+5000-index*1000}')
+                                                        )
+                                                            :Text('${price_data['price_now']+5000-index*1000}')
+                                                    )
+                                                ),
+                                              );
+                                            }
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 6.0, right: 6, bottom: 4),
+                                    child: Container(
+                                      child: Divider(color: Colors.black, thickness: 1,),
+                                    ),
+                                  ),
+                                  Text('미체결 주문'),
+                                  Padding(padding: EdgeInsets.all(3)),
+
+
+                                  StreamBuilder<DocumentSnapshot>(
+                                      stream: FirebaseFirestore.instance.collection('users').doc(widget.user.uid).snapshots(),
+                                      builder: (context, snp) {
+
+                                        if (snp.hasError) {
+                                          return  Text('미체결 주문이 없습니다',
+                                            style: TextStyle(color: Colors.black26, fontSize: 12),
+                                          );
+                                        }
+                                        if (snp.connectionState == ConnectionState.waiting) {
+                                          return  Text('미체결 주문이 없습니다',
+                                            style: TextStyle(color: Colors.black26, fontSize: 12),
+                                          );
+                                        }
+                                        Map<String, dynamic> user_data = snp.data?.data();
+                                        return !user_data['${widget.num}_isTrade']?
+                                        Text('미체결 주문이 없습니다',
+                                          style: TextStyle(color: Colors.black26, fontSize: 12),
+                                        ):Container(
+                                          child: StreamBuilder<QuerySnapshot>(
+                                            stream: FirebaseFirestore.instance.collection("trade_${widget.num}").snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData) return new Text("There is no expense");
+                                              var tradedoc=snapshot.data.docs;
+                                              int amount;
+                                              int stock_prices;
+                                              int type;
+
+
+                                              tradedoc.forEach((element) {
+
+                                                if(element.get('uid')==widget.user.uid){
+                                                  amount=element.get('stock');
+                                                  stock_prices = element.get('price');
+                                                  type=element.get('type');
+                                                }
+                                              });
+                                              return Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  type==1?
+                                                  Text( '${ amount.toString() } 주 매수',style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),)
+                                                      : Text( '${ amount.toString() } 주 매도',style: TextStyle(color: Colors.indigoAccent, fontWeight: FontWeight.bold),),
+                                                  Text('${stock_prices.toString()}원'),
+                                                  OutlinedButton(
+                                                    onPressed: () async{
+                                                      FirebaseFirestore.instance.collection('trade_${widget.num}').doc('trade_${widget.user.uid}_${type.toString()}').delete();
+                                                      CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+                                                      //users.doc(widget.user.uid).update({'money': widget.money-total_price});
+                                                      int total_price=amount*stock_prices;
+                                                      if(type==1){
+                                                        users.doc(widget.user.uid).update({'${widget.num}_isTrade': false, 'money':FieldValue.increment(total_price)});
+                                                      }
+                                                      if(type==0){
+                                                        users.doc(widget.user.uid).update({'${widget.num}_isTrade': false, 'startup_${widget.num}_stocks':FieldValue.increment(amount)});
+                                                      }
+
+
+                                                    },
+                                                    child: Text('취소'),
+                                                    style: ButtonStyle(
+                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                                      ),
                                                       ),
                                                     ),
-                                                    child: Text('${price_data['price_now']+5000-index*1000}')
-                                                )
-                                                    :Text('${price_data['price_now']+5000-index*1000}')
-                                            )
-                                        ),
-                                      );
-                                    }
-                                );
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 6.0, right: 6, bottom: 4),
-                            child: Container(
-                              child: Divider(color: Colors.black, thickness: 1,),
-                            ),
-                          ),
-                          Text('미체결 주문'),
-                          Padding(padding: EdgeInsets.all(3)),
+                                                  ),
 
-
-                          StreamBuilder<DocumentSnapshot>(
-                              stream: userStream,
-                              builder: (context, snp) {
-                                Map<String, dynamic> user_data = snp.data?.data();
-                                if (snp.hasError) {
-                                  return Text('ERROR');
-                                }
-                                if (snp.connectionState == ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-
-                                return !user_data['1_isTrade']?
-                                Text('미체결 주문이 없습니다',
-                                  style: TextStyle(color: Colors.black26, fontSize: 12),
-                                ):Container(
-                                  child: StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance.collection("trade_1").snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) return new Text("There is no expense");
-                                      var tradedoc=snapshot.data.docs;
-                                      int amount;
-                                      int stock_prices;
-                                      int type;
-
-
-                                      tradedoc.forEach((element) {
-
-                                        if(element.get('uid')==widget.user.uid){
-                                          amount=element.get('stock');
-                                          stock_prices = element.get('price');
-                                          type=element.get('type');
-                                        }
-                                      });
-                                      return Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          type==1?
-                                          Text( '${ amount.toString() } 주 매수',style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),)
-                                              : Text( '${ amount.toString() } 주 매도',style: TextStyle(color: Colors.indigoAccent, fontWeight: FontWeight.bold),),
-                                          Text('${stock_prices.toString()}원'),
-                                          OutlinedButton(
-                                            onPressed: () async{
-                                              FirebaseFirestore.instance.collection('trade_1').doc('trade_${widget.user.uid}_${type.toString()}').delete();
-                                              CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-                                              //users.doc(widget.user.uid).update({'money': widget.money-total_price});
-                                              users.doc(widget.user.uid).update({'1_isTrade': false});
-
-
-                                            },
-                                            child: Text('취소'),
-                                            style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                              ),
-                                              ),
-                                            ),
+                                                ],
+                                              );
+                                            }
                                           ),
-
-                                        ],
-                                      );
-                                    }
+                                        );
+                                      }
                                   ),
-                                );
-                              }
-                          ),
 
-                          Padding(padding: EdgeInsets.all(8)),
-                        ],
-                      )
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 8, top: 4),
-            child: Row(
-              children: [
-                Text('거래 가격'),
-                Spacer(),
-                FutureBuilder(
-                    future: set_trade_price(num1, num2),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      price=snapshot.data;
-                      return Text('${snapshot.data.toString()}원');
-                    }
-                )
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 5.0),
-                  child: ElevatedButton(
-
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.indigoAccent),
-
+                                  Padding(padding: EdgeInsets.all(8)),
+                                ],
+                              );
+                            }
+                          )
+                      ),
                     ),
-                    onPressed: (){
-                      if(check&&widget.trade_time){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return SellPage(1, money, stock, price, widget.user);
-                        }));
-                      }
-                      else{
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: const Text('가격을 선택해 주세요.'),
-                          backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 3),
-                          action: SnackBarAction(
-                            label: 'Done',
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            },
-                          ),
-                        ));
-                      }
-                    },
-                    child: Text('매도'),
                   ),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 5.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.redAccent),
-                    ),
-                    onPressed: (){
-                      if(check&&widget.trade_time){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return BuyPage(1, money, stock, price, widget.user);
-                        }));
-                      }
-                      else{
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: const Text('가격을 선택해 주세요.'),
-                          backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 3),
-                          action: SnackBarAction(
-                            label: 'Done',
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            },
-                          ),
-                        ));
-                      }
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8, bottom: 8, top: 4),
+                child: Row(
+                  children: [
+                    Text('거래 가격'),
+                    Spacer(),
+                    FutureBuilder(
+                        future: set_trade_price(num1, num2),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          price=snapshot.data;
+                          return Text('${snapshot.data.toString()}원');
+                        }
+                    )
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: ElevatedButton(
 
-                    },
-                    child: Text('매수'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.indigoAccent),
+
+                        ),
+                        onPressed: (){
+                          if(check&&widget.trade_time){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return SellPage(widget.num, money, stock, price, widget.user);
+                            }));
+                          }
+                          else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('가격을 선택해 주세요.'),
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 3),
+                              action: SnackBarAction(
+                                label: 'Done',
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                },
+                              ),
+                            ));
+                          }
+                        },
+                        child: Text('매도'),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.redAccent),
+                        ),
+                        onPressed: (){
+                          if(check&&widget.trade_time){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return BuyPage(widget.num, money, stock, price, widget.user);
+                            }));
+                          }
+                          else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('가격을 선택해 주세요.'),
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 3),
+                              action: SnackBarAction(
+                                label: 'Done',
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                },
+                              ),
+                            ));
+                          }
+
+                        },
+                        child: Text('매수'),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        );
+      }
     );
   }
 

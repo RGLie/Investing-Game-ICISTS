@@ -13,6 +13,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  final List<String> datas = <String>['full_name', 'nick_name', 'team', 'phone_number', 'money', 'startup_1_stocks', 'startup_2_stocks', 'startup_3_stocks','startup_4_stocks','startup_5_stocks','startup_6_stocks','startup_7_stocks','startup_8_stocks'];
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -41,68 +42,50 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   _buildBody(){
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final List<String> datas_ = <String>['이름', '닉네임', '팀', '전화번호', '돈', '기업1 주식', '기업2 주식', '기업3 주식','기업4 주식','기업5 주식','기업6 주식','기업7 주식','기업8 주식'];
+    CollectionReference userstream = FirebaseFirestore.instance.collection('users');
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(widget.user.uid).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+    return StreamBuilder(
+      stream: userstream.doc(widget.user.uid).snapshots(),
+      builder: (context, snapshot){
 
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
+        if(snapshot.hasError){
+          return Text('ERROR');
         }
-
-        if (snapshot.hasData && !snapshot.data.exists) {
-          return Text("Document does not exist");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
         }
+        Map<String, dynamic> user_data =snapshot.data.data();
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
-          return Padding(
+
+        return Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Center(
-              child: Column(
-                children: [
-                  Text('개인정보',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Text("이름: ${widget.user.displayName}"),
-                  Text("이메일: ${widget.user.email}"),
-                  Text("닉네임: ${data['nick_name']}"),
-                  Text("전화번호: ${data['phone_number']}"),
-                  Text("팀: ${data['team']}"),
-                  Text("돈: ${data['money'].toString()}"),
-                  Text("기업1 주식: ${data['startup_1_stocks'].toString()}"),
-                  Text("기업2 주식: ${data['startup_2_stocks'].toString()}"),
-                  Text("기업3 주식: ${data['startup_3_stocks'].toString()}"),
-                  Text("기업4 주식: ${data['startup_4_stocks'].toString()}"),
-                  Text("기업5 주식: ${data['startup_5_stocks'].toString()}"),
-                  Text("기업6 주식: ${data['startup_6_stocks'].toString()}"),
-                  Text("기업7 주식: ${data['startup_7_stocks'].toString()}"),
-                  Text("기업8 주식: ${data['startup_8_stocks'].toString()}"),
+            child: ListView.separated(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                itemCount: 13,
+                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                itemBuilder: (BuildContext context, int index){
+                  return Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
 
-                  Padding(padding: EdgeInsets.all(10)),
-                  OutlinedButton(
-                    onPressed: () {
-                      /*Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyPage(widget.user)));*/
-                    },
-                    child: Text('개인정보 수정'),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:30.0),
+                          child: Text(datas_[index]),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(right:30.0),
+                          child: Text(user_data[datas[index]] is int?user_data[datas[index]].toString():user_data[datas[index]]),
+                        ),
+
+                      ],
                     ),
-                  ),
-
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Text("loading");
+                  );
+                }
+            )
+        );
       },
     );
   }

@@ -17,9 +17,9 @@ class BuyPage extends StatefulWidget {
 }
 
 class _BuyPageState extends State<BuyPage> {
-  int _currentIntValue = 0;
+  int _currentIntValue = 10;
 
-  int possible=0;
+  int possible=10;
   @override
   void initState() {
     super.initState();
@@ -52,7 +52,7 @@ class _BuyPageState extends State<BuyPage> {
           ),
           NumberPicker(
             value: _currentIntValue,
-            minValue: 0,
+            minValue: 10,
             maxValue: possible,
             step: 10,
             haptics: true,
@@ -65,16 +65,16 @@ class _BuyPageState extends State<BuyPage> {
               IconButton(
                 icon: Icon(Icons.remove),
                 onPressed: () => setState(() {
-                  final newValue = _currentIntValue - 50;
-                  _currentIntValue = newValue.clamp(0, possible);
+                  final newValue = _currentIntValue - 10;
+                  _currentIntValue = newValue.clamp(10, possible);
                 }),
               ),
               Text('매수 수량: $_currentIntValue'),
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () => setState(() {
-                  final newValue = _currentIntValue + 50;
-                  _currentIntValue = newValue.clamp(0, possible);
+                  final newValue = _currentIntValue + 10;
+                  _currentIntValue = newValue.clamp(10, possible);
                 }),
               ),
             ],
@@ -99,7 +99,7 @@ class _BuyPageState extends State<BuyPage> {
                         CollectionReference users = FirebaseFirestore.instance.collection('users');
 
                         //users.doc(widget.user.uid).update({'money': widget.money-total_price});
-                        users.doc(widget.user.uid).update({'${widget.num}_isTrade': true});
+                        users.doc(widget.user.uid).update({'${widget.num}_isTrade': true, 'money':FieldValue.increment(-total_price)});
                         trades.doc('trade_${widget.user.uid}_1').set({
                           'uid': widget.user.uid,
                           'type': 1,
