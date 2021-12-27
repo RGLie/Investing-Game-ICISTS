@@ -17,13 +17,18 @@ class SellPage extends StatefulWidget {
 }
 
 class _SellPageState extends State<SellPage> {
-  int _currentIntValue = 10;
+  int _currentIntValue = 1;
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
+      appBar: AppBar(
+        title: Text('Buy',),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black54,
+      ),
     );
   }
 
@@ -45,9 +50,9 @@ class _SellPageState extends State<SellPage> {
           ),
           NumberPicker(
             value: _currentIntValue,
-            minValue: 10,
+            minValue: 1,
             maxValue: widget.stock,
-            step: 10,
+            step: 1,
             haptics: true,
             onChanged: (value) => setState(() => _currentIntValue = value),
           ),
