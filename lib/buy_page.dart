@@ -23,7 +23,7 @@ class _BuyPageState extends State<BuyPage> {
   @override
   void initState() {
     super.initState();
-    possible=(widget.money/widget.price).round();
+    possible=(widget.money/widget.price).floor();
   }
 
 
@@ -98,6 +98,19 @@ class _BuyPageState extends State<BuyPage> {
 
                       ),
                       onPressed: (){
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text('주문이 접수되었습니다.', style: TextStyle(color: Colors.black45),),
+                          backgroundColor: Colors.greenAccent,
+                          duration: const Duration(seconds: 3),
+                          action: SnackBarAction(
+                            label: 'Done',
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            },
+                          ),
+                        ));
+
                         int total_price= widget.price*_currentIntValue;
 
                         CollectionReference trades = FirebaseFirestore.instance.collection('trade_${widget.num}');

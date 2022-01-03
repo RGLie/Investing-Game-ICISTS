@@ -23,7 +23,7 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('개인정보'),
+        title: Text('내정보'),
         actions: [
           IconButton(
               icon: Icon(Icons.exit_to_app),
@@ -42,7 +42,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   _buildBody(){
-    final List<String> datas_ = <String>['이름', '닉네임', '팀', '전화번호', '돈', '기업1 주식', '기업2 주식', '기업3 주식','기업4 주식','기업5 주식','기업6 주식','기업7 주식','기업8 주식'];
+    final List<String> datas_ = <String>['이름', '닉네임', '팀', '전화번호', '돈', '비즈니스캔버스 주식', '클라우드스톤 주식', '깃컴퍼니 주식','남의집 주식','앤트 주식','에이슬립 주식','플라브 주식','빅웨이브 주식'];
     CollectionReference userstream = FirebaseFirestore.instance.collection('users');
 
     return StreamBuilder(
@@ -59,18 +59,18 @@ class _AccountPageState extends State<AccountPage> {
 
 
         return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(10.0),
             child: ListView.separated(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 5, right: 5),
                 itemCount: 13,
                 separatorBuilder: (BuildContext context, int index) => const Divider(),
                 itemBuilder: (BuildContext context, int index){
                   return Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
 
-                        Padding(
+                  Padding(
                           padding: const EdgeInsets.only(left:30.0),
                           child: Text(datas_[index]),
                         ),

@@ -30,6 +30,22 @@ class _Startup1TradeState extends State<Startup1Trade> {
   int _currentPriceValue;
   CollectionReference _tradeStream = FirebaseFirestore.instance.collection('trade_state');
 
+  MaterialColor kPrimaryColor = const MaterialColor(
+    0xFF7568F0,
+    const <int, Color>{
+      50: const Color(0xFF7568F0),
+      100: const Color(0xFF7568F0),
+      200: const Color(0xFF7568F0),
+      300: const Color(0xFF7568F0),
+      400: const Color(0xFF7568F0),
+      500: const Color(0xFF7568F0),
+      600: const Color(0xFF7568F0),
+      700: const Color(0xFF7568F0),
+      800: const Color(0xFF7568F0),
+      900: const Color(0xFF7568F0),
+    },
+  );
+
   final List<String> startup = <String>['삼성전자', '애플', '알파벳 Inc.', '테슬라', '인텔', '페이스북', '아마존닷컴', '엘지화학'];
   List<String> startup_image=<String>[
     'https://yt3.ggpht.com/ytc/AKedOLT5YOquq7WTrcTgMFRYdk4-m0ASAd1Io41kSC29bA=s900-c-k-c0x00ffffff-no-rj',
@@ -84,7 +100,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
       builder: (context, snap) {
         Map<String, dynamic> price_data = snap.data?.data() ?? {'price_now' : '0', 'price_past':0};
         if (snap.hasError) {
-          return Text('ERROR');
+          return Text(' ');
         }
         if (snap.connectionState == ConnectionState.waiting) {
           return Center(
@@ -115,7 +131,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(8)),
-                  Text(price_data['name'], style: TextStyle(fontSize: 20),),
+                  Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
                   Padding(padding: EdgeInsets.all(8)),
                   Expanded(
                     child: Column(
@@ -153,6 +169,70 @@ class _Startup1TradeState extends State<Startup1Trade> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(kPrimaryColor.withOpacity(0.7)),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                          context: context,
+                          //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              //Dialog Main Title
+                              title: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 60,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(price_data['image_link']),
+                                    ),
+                                  ),
+                                  Padding(padding: EdgeInsets.all(8)),
+                                  Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
+                                  Padding(padding: EdgeInsets.all(8))
+                                ],
+                              ),
+                              //
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(price_data['info1']),
+                                  Padding(padding: EdgeInsets.all(5)),
+                                  Text(price_data['info2']),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                new TextButton(
+                                    child: new Text("확인"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }
+                                ),
+
+                              ],
+                            );
+                          });
+
+
+                        },
+                        child: Text('기업정보 더보기'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -168,7 +248,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
                             stream: userStream,
                             builder: (context, snap) {
                               if (snap.hasError) {
-                                return Text('ERROR');
+                                return Text(' ');
                               }
                               if (snap.connectionState ==
                                   ConnectionState.waiting) {
@@ -413,81 +493,128 @@ class _Startup1TradeState extends State<Startup1Trade> {
                 stream: _tradeStream.doc('open').snapshots(),
                 builder: (context, snapshot) {
                   if(snapshot.hasError){
-                    return Text('ERROR');
+                    return Text(' ');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text('ERROR');
+                    return Text(' ');
                   }
                   Map<String, dynamic> state_data = snapshot.data.data() as Map<String, dynamic>;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 5.0),
-                          child: ElevatedButton(
 
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.indigoAccent),
 
+                  return StreamBuilder<DocumentSnapshot>(
+                    stream:  FirebaseFirestore.instance.collection('users').doc(widget.user.uid).snapshots(),
+                    builder: (context, snap) {
+                      if(snap.hasError){
+                        return Text(' ');
+                      }
+                      if (snap.connectionState == ConnectionState.waiting) {
+                        return Text(' ');
+                      }
+                      Map<String, dynamic> usertrade_data = snap.data.data() as Map<String, dynamic>;
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 5.0),
+                              child: ElevatedButton(
+
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.indigoAccent),
+
+                                ),
+                                onPressed: (){
+                                  if(widget.trade_time&&state_data['open']){
+                                    if (usertrade_data['${widget.num}_isTrade']==false) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return SellPage(widget.num, money, stock, _currentPriceValue, widget.user);
+                                      }));
+                                    }
+                                    else{
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: const Text('이미 주문된 거래가 있습니다'),
+                                        backgroundColor: Colors.red,
+                                        duration: const Duration(seconds: 3),
+                                        action: SnackBarAction(
+                                          label: 'Done',
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                          },
+                                        ),
+                                      ));
+                                    }
+                                  }
+                                  else{
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: const Text('거래 시간이 아닙니다'),
+                                      backgroundColor: Colors.red,
+                                      duration: const Duration(seconds: 3),
+                                      action: SnackBarAction(
+                                        label: 'Done',
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        },
+                                      ),
+                                    ));
+                                  }
+                                },
+                                child: Text('매도'),
+                              ),
                             ),
-                            onPressed: (){
-                              if(widget.trade_time&&state_data['open']){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                  return SellPage(widget.num, money, stock, _currentPriceValue, widget.user);
-                                }));
-                              }
-                              else{
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: const Text('거래 시간이 아닙니다'),
-                                  backgroundColor: Colors.red,
-                                  duration: const Duration(seconds: 3),
-                                  action: SnackBarAction(
-                                    label: 'Done',
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    },
-                                  ),
-                                ));
-                              }
-                            },
-                            child: Text('매도'),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 5.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.redAccent),
-                            ),
-                            onPressed: (){
-                              if(widget.trade_time&&state_data['open']){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                  return BuyPage(widget.num, money, stock, _currentPriceValue, widget.user);
-                                }));
-                              }
-                              else{
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: const Text('거래 시간이 아닙니다'),
-                                  backgroundColor: Colors.red,
-                                  duration: const Duration(seconds: 3),
-                                  action: SnackBarAction(
-                                    label: 'Done',
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    },
-                                  ),
-                                ));
-                              }
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.redAccent),
+                                ),
+                                onPressed: (){
+                                  if(widget.trade_time&&state_data['open']){
 
-                            },
-                            child: Text('매수'),
+
+                                    if (usertrade_data['${widget.num}_isTrade']==false) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return BuyPage(widget.num, money, stock, _currentPriceValue, widget.user);
+                                      }));
+                                    }
+                                    else{
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: const Text('이미 주문된 거래가 있습니다'),
+                                        backgroundColor: Colors.red,
+                                        duration: const Duration(seconds: 3),
+                                        action: SnackBarAction(
+                                          label: 'Done',
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                          },
+                                        ),
+                                      ));
+                                    }
+                                  }
+                                  else{
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: const Text('거래 시간이 아닙니다'),
+                                      backgroundColor: Colors.red,
+                                      duration: const Duration(seconds: 3),
+                                      action: SnackBarAction(
+                                        label: 'Done',
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        },
+                                      ),
+                                    ));
+                                  }
+
+                                },
+                                child: Text('매수'),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    }
                   );
                 }
               )

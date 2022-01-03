@@ -91,6 +91,18 @@ class _SellPageState extends State<SellPage> {
                       ),
                       onPressed: (){
 
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text('주문이 접수되었습니다.', style: TextStyle(color: Colors.black45)),
+                          backgroundColor: Colors.greenAccent,
+                          duration: const Duration(seconds: 3),
+                          action: SnackBarAction(
+                            label: 'Done',
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            },
+                          ),
+                        ));
+
 
                         CollectionReference trades = FirebaseFirestore.instance.collection('trade_${widget.num}');
                         CollectionReference users = FirebaseFirestore.instance.collection('users');
