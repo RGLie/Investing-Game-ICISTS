@@ -27,10 +27,10 @@ class _QuizPageState extends State<QuizPage> {
       stream: _tradeStream.doc('quiz_state').snapshots(),
       builder: (context, snapshot) {
         if(snapshot.hasError){
-          return Text('ERROR');
+          return Text('');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('ERROR');
+          return Text('');
         }
         Map<String, dynamic> state_data = snapshot.data.data() as Map<String, dynamic>;
         return Center(

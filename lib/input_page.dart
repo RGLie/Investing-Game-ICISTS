@@ -109,7 +109,7 @@ class _InputPageState extends State<InputPage> {
                           if (value.isEmpty) {
                             return "닉네임을 입력해주세요";
                           }
-                          else if(value.length<6){
+                          else if(value.length>6){
                             return "닉네임은 5자 이내로 설정해주세요";
                           }
                           return null;

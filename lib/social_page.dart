@@ -61,7 +61,7 @@ class _SocialPageState extends State<SocialPage> {
               stream: FirebaseFirestore.instance.collection("users").orderBy(
                   'money', descending: true).snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return new Text("There is no expense");
+                if (!snapshot.hasData) return new Text(" ");
                 var userdoc = snapshot.data.docs;
                 var user_data = Map<String, dynamic>();
                 var asset = Map<String, int>();
@@ -76,7 +76,7 @@ class _SocialPageState extends State<SocialPage> {
                     stream: prices.doc('price').snapshots(),
                     builder: (context, snap) {
                       if (snap.hasError) {
-                        return Text('ERROR');
+                        return Text(' ');
                       }
                       if (snap.connectionState == ConnectionState.waiting) {
                         return Center(
@@ -160,7 +160,7 @@ class _SocialPageState extends State<SocialPage> {
                             stream: prices.doc('names').snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
-                                return Text('ERROR');
+                                return Text(' ');
                               }
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
