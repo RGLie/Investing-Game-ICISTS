@@ -67,7 +67,7 @@ class _TradePageState extends State<TradePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('거래소'),
+        title: Text('거래소2'),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _tradeStream.doc('open').snapshots(),

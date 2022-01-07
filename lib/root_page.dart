@@ -18,9 +18,9 @@ class RootPage extends StatelessWidget {
           if(!snapshot.hasData){
             return LoginPage();
           }
-          if(!snapshot.data.emailVerified){
-            return EmailPage(snapshot.data);
-          }
+          // if(!snapshot.data.emailVerified){
+          //   return EmailPage(snapshot.data);
+          // }
           if(snapshot.data.displayName==null){
             return InputPage(snapshot.data);
           }
