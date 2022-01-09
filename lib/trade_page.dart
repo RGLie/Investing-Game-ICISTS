@@ -67,13 +67,13 @@ class _TradePageState extends State<TradePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('거래소2'),
+        title: Text('거래소'),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _tradeStream.doc('open').snapshots(),
         builder: (context, snapshot){
           if(snapshot.hasError){
-            return Text('ERROR');
+            return Text(' ');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

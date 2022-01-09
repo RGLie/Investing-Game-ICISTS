@@ -249,7 +249,11 @@ class _InputPageState extends State<InputPage> {
                                                     'startup_5_stocks' : ds['stocks'],
                                                     'startup_6_stocks' : ds['stocks'],
                                                     'startup_7_stocks' : ds['stocks'],
-                                                    'startup_8_stocks' : ds['stocks']
+                                                    'startup_8_stocks' : ds['stocks'],
+                                                    'quiz_num' : 0,
+                                                    'quiz_right': 0,
+                                                    'quiz_wrong':0,
+                                                    'quiz_state':false
                                                   });
                                               });
 
