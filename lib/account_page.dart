@@ -42,13 +42,12 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   _buildBody(){
-    final List<String> datas_ = <String>['이름', '닉네임', '팀', '전화번호', '돈', '비즈니스캔버스 주식', '클라우드스톤 주식', '깃컴퍼니 주식','남의집 주식','앤트 주식','에이슬립 주식','플라브 주식','빅웨이브 주식'];
+    final List<String> datas_ = <String>['이름', '닉네임', '팀', '전화번호', '돈', '깃컴퍼니 주식', '남의집 주식', '비즈니스캔버스 주식','빅웨이브 주식','앤트 주식','에이슬립 주식','클라우드스톤 주식','플라브 주식'];
     CollectionReference userstream = FirebaseFirestore.instance.collection('users');
 
     return StreamBuilder(
       stream: userstream.doc(widget.user.uid).snapshots(),
       builder: (context, snapshot){
-
         if(snapshot.hasError){
           return Text('ERROR');
         }

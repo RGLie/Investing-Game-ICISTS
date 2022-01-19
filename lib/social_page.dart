@@ -38,25 +38,7 @@ class _SocialPageState extends State<SocialPage> {
             return Center(
                 child: CircularProgressIndicator());
           }
-          Map<String, dynamic> state_data = snapshot.data.data() as Map<
-              String,
-              dynamic>;
-          if (state_data['open'] == false) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                  Text('거래를 처리중입니다',style: TextStyle(fontSize: 17),),
-                  Text('잠시만 기다려주세요',style: TextStyle(fontSize: 17),),
-                ],
-              ),
-            );
-          }
+          Map<String, dynamic> state_data = snapshot.data.data() as Map<String, dynamic>;
           return new StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection("users").orderBy(
                   'money', descending: true).snapshots(),
@@ -149,6 +131,7 @@ class _SocialPageState extends State<SocialPage> {
                           asset_order_uid[value['rank'] - 1] = key;
                         });
                       });
+                      //print(asset_order_uid);
 
 
                       // asset_order.sort();
@@ -260,21 +243,27 @@ class _SocialPageState extends State<SocialPage> {
                                             },
                                           ),
                                           check % 2 == 0 ? Container() : Column(
+                                            //crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
+                                              Text('평가금액',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black38),),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['1']} 평가금액',
+
+                                                  Text('${name_data['1']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['1'] *
                                                       user_data[widget.user
                                                           .uid]['1']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -282,16 +271,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['2']} 평가금액',
+                                                  Text('${name_data['2']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['2'] *
                                                       user_data[widget.user
                                                           .uid]['2']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -299,16 +288,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['3']} 평가금액',
+                                                  Text('${name_data['3']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['3'] *
                                                       user_data[widget.user
                                                           .uid]['3']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -316,16 +305,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['4']} 평가금액',
+                                                  Text('${name_data['4']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['4'] *
                                                       user_data[widget.user
                                                           .uid]['4']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -333,16 +322,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['5']} 평가금액',
+                                                  Text('${name_data['5']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['5'] *
                                                       user_data[widget.user
                                                           .uid]['5']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -350,16 +339,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['6']} 평가금액',
+                                                  Text('${name_data['6']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['6'] *
                                                       user_data[widget.user
                                                           .uid]['6']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -367,16 +356,16 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['7']} 평가금액',
+                                                  Text('${name_data['7']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['7'] *
                                                       user_data[widget.user
                                                           .uid]['7']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
@@ -384,34 +373,22 @@ class _SocialPageState extends State<SocialPage> {
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Text('${name_data['8']} 평가금액',
+                                                  Text('${name_data['8']}',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors
                                                             .black38),),
                                                   Text('${price_data['8'] *
                                                       user_data[widget.user
                                                           .uid]['8']}원',
                                                     style: TextStyle(
-                                                        fontSize: 17,
+                                                        fontSize: 15,
                                                         color: Colors.black38),)
                                                 ],
                                               ),
                                             ],
                                           ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Text('전체 자산 순위', style: TextStyle(
-                                                  fontSize: 23,
-                                                  color: Colors.redAccent),),
-                                              Text('${user_data[widget.user
-                                                  .uid]['rank']}위',
-                                                style: TextStyle(fontSize: 23,
-                                                    color: Colors.redAccent),)
-                                            ],
-                                          ),
+
 
                                         ],
                                       ),
@@ -431,6 +408,36 @@ class _SocialPageState extends State<SocialPage> {
                                     Padding(padding: EdgeInsets.all(10)),
 
 
+                                    if(state_data['rank_open']==false)
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text('자산랭킹은 2라운드부터 공개됩니다.',style: TextStyle(fontSize: 17, color: Colors.redAccent),),
+                                            //Text('감사합니다.',style: TextStyle(fontSize: 17),),
+                                          ],
+                                        ),
+                                      ),
+
+                                    if ((state_data['open'] == false)&&(state_data['rank_open']))
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+
+                                            Padding(
+                                              padding: const EdgeInsets.all(20.0),
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                            Text('거래를 처리중입니다',style: TextStyle(fontSize: 17),),
+                                            Text('잠시만 기다려주세요',style: TextStyle(fontSize: 17),),
+                                          ],
+                                        ),
+                                      ),
+
+
+
+                                    if(state_data['open']&&state_data['rank_open'])
                                     StreamBuilder<DocumentSnapshot>(
                                         stream: FirebaseFirestore.instance
                                             .collection('trade_state').doc(
@@ -449,24 +456,21 @@ class _SocialPageState extends State<SocialPage> {
                                               .data.data() as Map<
                                               String,
                                               dynamic>;
-                                          if (state_data['open'] == false) {
-                                            return Center(
-                                              child: Column(
-                                                children: [
-
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .all(20.0),
-                                                    child: CircularProgressIndicator(),
-                                                  ),
-                                                  Text('거래를 처리중입니다'),
-                                                  Text('잠시만 기다려주세요'),
-                                                ],
-                                              ),
-                                            );
-                                          }
                                           return Column(
                                             children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Text('전체 자산 순위', style: TextStyle(
+                                                      fontSize: 23,
+                                                      color: Colors.redAccent),),
+                                                  Text('${user_data[widget.user
+                                                      .uid]['rank']}위',
+                                                    style: TextStyle(fontSize: 23,
+                                                        color: Colors.redAccent),)
+                                                ],
+                                              ),
                                               Padding(
                                                 padding: const EdgeInsets.all(
                                                     10),

@@ -39,6 +39,9 @@ dependencies:
   flutter_phoenix: ^1.0.0
   async: ^2.3.0
   numberpicker: ^2.1.1
+  url_launcher: ^6.0.17
+  syncfusion_flutter_charts: ^19.4.41
+
 
 dev_dependencies:
   flutter_test:

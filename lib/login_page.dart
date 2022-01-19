@@ -103,7 +103,9 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   )
               ),
-              Padding(padding: EdgeInsets.all(8)),
+              Padding(padding: EdgeInsets.all(4)),
+              Text('웹 진행과 관련된 문의사항 및 오류 등은 카톡 cthero1 또는 인스타 @_2002.jh_으로 바로 연락주세요', textAlign: TextAlign.center,),
+              Padding(padding: EdgeInsets.all(4)),
               Container(
                 width: double.infinity,
                 height: 60,
@@ -140,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
+
             ],
           ),
         ),

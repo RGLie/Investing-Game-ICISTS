@@ -17,13 +17,13 @@ class BuyPage extends StatefulWidget {
 }
 
 class _BuyPageState extends State<BuyPage> {
-  int _currentIntValue = 1;
+  int _currentIntValue = 0;
 
   int possible=10;
   @override
   void initState() {
     super.initState();
-    possible=(widget.money/widget.price).floor();
+    possible=((widget.money/widget.price)).floor();
   }
 
 
@@ -57,7 +57,7 @@ class _BuyPageState extends State<BuyPage> {
           ),
           NumberPicker(
             value: _currentIntValue,
-            minValue: 1,
+            minValue: 0,
             maxValue: possible,
             step: 1,
             haptics: true,

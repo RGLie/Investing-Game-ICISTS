@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:investing_game_icists/sell_page.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'buy_page.dart';
 
@@ -131,7 +132,11 @@ class _Startup1TradeState extends State<Startup1Trade> {
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(8)),
-                  Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
+                  Row(
+                    children: [
+                      Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
+                      Text(' ${price_data['code']}', style: TextStyle(fontSize: 18, color: Colors.black38)),
+                    ],),
                   Padding(padding: EdgeInsets.all(8)),
                   Expanded(
                     child: Column(
@@ -199,7 +204,12 @@ class _Startup1TradeState extends State<Startup1Trade> {
                                     ),
                                   ),
                                   Padding(padding: EdgeInsets.all(8)),
-                                  Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
+                                  Row(
+                                    children: [
+                                      Text(price_data['name'], style: TextStyle(fontSize: 20, color: Colors.black)),
+                                      Text(' ${price_data['code']}', style: TextStyle(fontSize: 18, color: Colors.black38)),
+                                    ],
+                                  ),
                                   Padding(padding: EdgeInsets.all(8))
                                 ],
                               ),
@@ -211,6 +221,25 @@ class _Startup1TradeState extends State<Startup1Trade> {
                                   Text(price_data['info1']),
                                   Padding(padding: EdgeInsets.all(5)),
                                   Text(price_data['info2']),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.all<Color>(kPrimaryColor.withOpacity(0.7)),
+                                            ),
+                                            //onPressed: _launchURL(price_data['url']),
+                                            onPressed: () async{
+                                              _launchURL(price_data['url']);
+                                            },
+                                            child: Text('자세히보기', style: TextStyle(color: Colors.white),),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                               actions: <Widget>[
@@ -290,7 +319,7 @@ class _Startup1TradeState extends State<Startup1Trade> {
 
                                   NumberPicker(
                                     value: _currentPriceValue,
-                                    minValue: price_data['price_now']-6000,
+                                    minValue: 1000,
                                     maxValue: price_data['price_now']+6000,
                                     step: 1000,
                                     haptics: true,
@@ -628,6 +657,10 @@ class _Startup1TradeState extends State<Startup1Trade> {
   Future<int> set_trade_price(int index, int money) async{
 
     return money+5000-index*1000;
+  }
+
+  _launchURL(String _url) async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
   }
 
 

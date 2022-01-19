@@ -82,7 +82,7 @@ class _InputPageState extends State<InputPage> {
                           if (value.isEmpty) {
                             return "이름을 입력해주세요";
                           }
-                          
+
                           return null;
                         },
                       ),
@@ -147,7 +147,7 @@ class _InputPageState extends State<InputPage> {
                       Padding(padding: EdgeInsets.all(10)),
                       TextFormField(
                         controller: _teamController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           hintText: '팀',
                           labelText: '팀',
@@ -173,7 +173,11 @@ class _InputPageState extends State<InputPage> {
                         },
 
                       ),
+                      Padding(padding: EdgeInsets.only(top:5)),
+                      Text('오프라인 참가팀은 \'[오프라인]N팀\' 형식으로, \n온라인 참가팀 \'[온라인]N팀\' 형식으로,\n온라인 참가자는 \'[온라인]개인\'으로 입력해주세요.'
+                      '\n\nex) 오프라인 0팀 -> [오프라인]0팀'),
                       Padding(padding: EdgeInsets.all(10)),
+
                       Container(
                         width: double.infinity,
                         height: 60,
@@ -304,6 +308,7 @@ class _InputPageState extends State<InputPage> {
                           ),
                         ),
                       ),
+
 
                     ],
                   )

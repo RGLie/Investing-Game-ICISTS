@@ -305,6 +305,10 @@ class _QuizPageState extends State<QuizPage> {
             child: Column(
               children: [
                 Padding(
+                  padding: EdgeInsets.only(top:5,bottom: 5),
+                  child: Text(quiz_data['startup']),
+                ),
+                Padding(
                   padding: EdgeInsets.only(top:5, bottom: 5, left: 40, right: 40),
                   child: Text(quiz_data['question'], textAlign: TextAlign.center ,style: TextStyle(fontSize: 30),),
                 ),
